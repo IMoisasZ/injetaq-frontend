@@ -1,0 +1,9 @@
+.title {
+    text-align: center;
+}
+
+.divBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,10 @@
+.link {
+    text-decoration: none;
+}
+
+.logo {
+    width: 3.5em;
+    height: 3em;
+    cursor: pointer;
+    text-decoration: none;
+}
