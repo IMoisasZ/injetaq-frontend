@@ -1,3 +1,5 @@
+/** @format */
+
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import NavBar from '../components/navBar/NavBar'
@@ -7,6 +9,7 @@ import Cadastros from '../pages/cadastros/Cadastros'
 import Cliente from '../pages/cliente/Cliente'
 import Setor from '../pages/setor/Setor'
 import DI from '../pages/di/DI'
+import AlertaQualidade from '../pages/alertaQualidade/AlertaQualidade'
 
 export default function InjetaqRoutes({ children }) {
 	return (
@@ -33,6 +36,10 @@ export default function InjetaqRoutes({ children }) {
 					<Route
 						path='/cadastros/di'
 						element={<DI />}
+					/>
+					<Route
+						path='/cadastros/alerta_qualidade'
+						element={<AlertaQualidade />}
 					/>
 				</Routes>
 				<Footer />

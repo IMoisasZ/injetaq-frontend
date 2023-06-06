@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
@@ -45,7 +47,7 @@ function ResponsiveAppBar() {
 
 	return (
 		<AppBar position='static'>
-			<Container maxWidth='xl'>
+			<Container maxWidth='xxl'>
 				<Toolbar disableGutters>
 					<img
 						className={style.logo}

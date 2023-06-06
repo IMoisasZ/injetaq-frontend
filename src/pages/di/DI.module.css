@@ -29,10 +29,6 @@
 
 .icon {
     font-size: 4em;
-    color: #c0c0c0;
+    color: #000000;
     transform: 1s;
-}
-
-.icon:hover {
-    color: #fff;
 }

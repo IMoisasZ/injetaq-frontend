@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from 'react'
 import MyContainer from '../../components/container/Container'
 import Form from '../../components/form/Form'
@@ -30,7 +32,7 @@ export default function DI() {
 	const [listClients, setListClients] = useState([])
 	const [previusStartDate, setPreviusStartDate] = useState('')
 	const [labelPreviusStartDate, setLabelPreviusStartDate] = useState('')
-	const [previsuEndDate, setPreviusEndDate] = useState('')
+	const [previusEndDate, setPreviusEndDate] = useState('')
 	const [labelPreviusEndDate, setLabelPreviusEndDate] = useState('')
 	const [message, setMessage] = useState('')
 	const [listDi, setListDi] = useState([])
@@ -67,12 +69,15 @@ export default function DI() {
 				partName,
 				client_id: cliente,
 				previusStartData: previusStartDate,
-				previsuEndData: previsuEndDate,
+				previusEndData: previusEndDate,
 				orderNumber,
 				budget,
 				status_di_id: 1,
 			})
+			setDi(response.data.di)
+			setStatusDiId(response.data.status_di_id)
 			setMessage({ type: 'success', msg: 'DI incluída com sucesso!' })
+			console.log(response.data)
 		} catch (error) {
 			console.log(error)
 			setMessage({ type: 'error', msg: error.response.data.msg })
@@ -139,7 +144,7 @@ export default function DI() {
 						style={{
 							display: 'flex',
 							alignItems: 'flex-start',
-							justifyContent: 'flex-start',
+							justifyContent: 'space-between',
 							width: '100%',
 						}}>
 						<Input
@@ -147,35 +152,14 @@ export default function DI() {
 							type='number'
 							disabled={true}
 							value={di}
-							width='30%'
-						/>
-					</div>
-					<div
-						style={{
-							display: 'flex',
-							justifyContent: 'space-between',
-							width: '100%',
-						}}>
-						<Input
-							label='Número do pedido'
-							type='text'
-							disabled={true}
-							value={orderNumber}
-							width='30%'
-						/>
-						<Input
-							label='Número do orçamento'
-							type='text'
-							disabled={true}
-							value={budget}
-							width='30%'
+							width='10%'
 						/>
 						<Input
 							label='Status DI'
 							type='text'
 							disabled={true}
 							value={statusDiId}
-							width='30%'
+							width='20%'
 						/>
 					</div>
 				</div>
@@ -187,11 +171,29 @@ export default function DI() {
 						margin: '0 0 1% 0',
 					}}>
 					<Input
+						label='Número do pedido'
+						type='text'
+						disabled={false}
+						value={orderNumber}
+						width='30%'
+						handleOnChange={(e) => setOrderNumber(e.target.value)}
+						margin='0 0.5% 0 0 '
+					/>
+					<Input
+						label='Número do orçamento'
+						type='text'
+						disabled={false}
+						value={budget}
+						width='30%'
+						handleOnChange={(e) => setBudget(e.target.value)}
+						margin='0 0.5% 0 0 '
+					/>
+					<Input
 						label='OP'
 						type='text'
 						disabled={false}
 						value={op}
-						width='100%'
+						width='15%'
 						handleOnChange={(e) => setOp(e.currentTarget.value)}
 						margin='0 0.5% 0 0'
 					/>
@@ -273,7 +275,7 @@ export default function DI() {
 						label={labelPreviusEndDate}
 						type='date'
 						disabled={false}
-						value={previsuEndDate}
+						value={previusEndDate}
 						width='20%'
 						handleOnChange={(e) => setPreviusEndDate(e.currentTarget.value)}
 						handleOnFocus={() =>

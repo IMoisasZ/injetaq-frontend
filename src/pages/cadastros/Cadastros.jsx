@@ -1,3 +1,5 @@
+/** @format */
+
 import React from 'react'
 import { Link } from 'react-router-dom'
 import MyContainer from '../../components/container/Container'
@@ -7,6 +9,12 @@ const cadastros = [
 	{ id: 2, namePage: 'Cliente', link: '/cadastros/cliente' },
 	{ id: 3, namePage: 'Setor', link: '/cadastros/setor' },
 	{ id: 4, namePage: 'DI', link: '/cadastros/di' },
+	{
+		id: 5,
+		namePage: 'Alerta da Qualidade',
+		link: '/cadastros/alerta_qualidade',
+	},
+	{ id: 6, namePage: 'RNC', link: '/cadastros/rnc' },
 ]
 
 export default function Cadastros() {
