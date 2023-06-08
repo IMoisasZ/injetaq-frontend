@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from 'react'
 import MyContainer from '../../components/container/Container'
 import Form from '../../components/form/Form'
@@ -18,12 +20,15 @@ export default function Setor() {
 	const [listSetores, setListSetores] = useState([])
 	const [nameButton, setNameButton] = useState('Cadastrar')
 
+	const user = 1
+
 	// add or alter setor
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 		if (nameButton === 'Cadastrar') {
 			try {
 				await api.post(`/setor/add`, {
+					user_id: user,
 					description,
 					activate,
 				})
@@ -45,6 +50,7 @@ export default function Setor() {
 			try {
 				await api.patch(`/setor/update`, {
 					id,
+					user_id: user,
 					description,
 					activate,
 				})
@@ -106,7 +112,7 @@ export default function Setor() {
 	// use efect to execute function all setores
 	useEffect(() => {
 		allSetores()
-	})
+	}, [])
 
 	// header to table of setores
 	const header = ['ID', 'Setor', 'Ativo', 'Ações']

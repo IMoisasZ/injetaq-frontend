@@ -1,8 +1,11 @@
+/** @format */
+
 import React from 'react'
 import style from './Table.module.css'
 
 export default function Table({
 	header,
+	numberColAction = 2,
 	children,
 	width = '100%',
 	marginDiv = '0 auto',
@@ -16,12 +19,12 @@ export default function Table({
 					margin: marginTable,
 				}}>
 				<thead>
-					<tr>
+					<tr style={{ textAlign: 'center' }}>
 						{header.map((head, index) => {
 							return head === 'Ações' ? (
 								<th
 									key={index}
-									colSpan={2}>
+									colSpan={numberColAction}>
 									{head}
 								</th>
 							) : (

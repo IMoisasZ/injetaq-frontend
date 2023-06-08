@@ -1,8 +1,11 @@
+/** @format */
+
 import React from 'react'
 import Progress from '../progress/Progress'
 import style from './Message.module.css'
 
 export default function Message({ message }) {
+	console.debug('===>', message)
 	return (
 		<div className={style.containerMessage}>
 			<p

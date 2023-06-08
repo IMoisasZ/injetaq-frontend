@@ -6,13 +6,7 @@ import TextField from '@mui/material/TextField'
 
 export default function TextArea() {
 	return (
-		<Box
-			component='form'
-			sx={{
-				'& .MuiTextField-root': { m: 0, width: '100%' },
-			}}
-			noValidate
-			autoComplete='off'>
+		<Box>
 			<TextField
 				id='outlined-multiline-flexible'
 				label='Multiline'
