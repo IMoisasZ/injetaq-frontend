@@ -10,11 +10,19 @@ export default function Form({
 	justifyContent = 'center',
 	alignItems = 'center',
 	width,
+	margin,
 }) {
 	return (
 		<form
 			onSubmit={handleOnSubmit}
-			style={{ display, flexDirection, justifyContent, alignItems, width }}>
+			style={{
+				display,
+				flexDirection,
+				justifyContent,
+				alignItems,
+				width,
+				margin,
+			}}>
 			{children}
 		</form>
 	)

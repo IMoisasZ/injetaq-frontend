@@ -8,13 +8,14 @@ export default function MyButton({
 	handleOnClick = null,
 	type = 'button',
 	backgroundColor,
+	width = '100%',
 }) {
 	return (
 		<Stack
 			spacing={2}
 			direction='row'>
 			<Button
-				style={{ backgroundColor }}
+				style={{ backgroundColor, width }}
 				variant={variant}
 				onClick={handleOnClick}
 				type={type}>

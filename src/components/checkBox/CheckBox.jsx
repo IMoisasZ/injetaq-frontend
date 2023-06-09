@@ -10,6 +10,7 @@ export default function CheckBox({
 	alignItems = 'center',
 	flexDirection = 'row',
 	margin,
+	width = '100%',
 }) {
 	return (
 		<div
@@ -19,6 +20,7 @@ export default function CheckBox({
 				justifyContent,
 				alignItems,
 				margin,
+				width,
 			}}>
 			<p>{nameCheckBox}</p>
 			<Checkbox

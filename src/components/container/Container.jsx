@@ -12,7 +12,7 @@ export default function MyContainer({ children, backgroundColor }) {
 			<Container
 				maxWidth
 				style={{ backgroundColor }}>
-				<Box sx={{ height: '78vh' }}>{children}</Box>
+				<Box sx={{ height: '78vh', width: '100%' }}>{children}</Box>
 			</Container>
 		</React.Fragment>
 	)

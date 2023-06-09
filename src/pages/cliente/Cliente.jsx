@@ -232,12 +232,13 @@ export default function Cliente({ handleModal }) {
 			<h1 className={style.title}>Cliente</h1>
 			<Form
 				handleOnSubmit={handleSubmit}
-				flexDirection='row'>
+				flexDirection='row'
+				width='100%'>
 				<Input
 					value={description}
 					handleOnChange={(e) => setDescription(e.target.value)}
 					label='Cliente'
-					width='53%'
+					width='80%'
 					margin='0 2% 0 0'
 				/>
 				<CheckBox
@@ -245,6 +246,7 @@ export default function Cliente({ handleModal }) {
 					value={activate}
 					toggleOnChange={() => setActivate(!activate)}
 					margin='0 2% 0 0'
+					width='10%'
 				/>
 				<MyButton
 					nameBtn={nameButton}
@@ -256,7 +258,7 @@ export default function Cliente({ handleModal }) {
 
 			<Table
 				header={header}
-				width='67.5%'
+				width='100%'
 				numberColAction={3}>
 				{listClients.map((data) => {
 					return (
@@ -295,6 +297,7 @@ export default function Cliente({ handleModal }) {
 											justifyContent='space-between'
 											alignItems='center'
 											width='100%'
+											margin='1% 0 0 0'
 											handleOnSubmit={(e) => handleContact(e, data.id)}>
 											<div style={{ width: '100%' }}>
 												<Input

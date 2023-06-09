@@ -10,15 +10,23 @@ import api from '../../api/api'
 import Table from '../../components/table/Table'
 import ButtonTable from '../../components/button/ButtonTable'
 import Message from '../../components/message/Message'
+import Modal from '../../components/modal/Modal'
 import style from './Setor.module.css'
 
 export default function Setor() {
 	const [id, setId] = useState('')
+	const [responsableId, setResponsableId] = useState('')
 	const [description, setDescription] = useState('')
 	const [activate, setActivate] = useState(true)
 	const [message, setMessage] = useState('')
 	const [listSetores, setListSetores] = useState([])
 	const [nameButton, setNameButton] = useState('Cadastrar')
+	const [name, setName] = useState('')
+	const [email, setEmail] = useState('')
+	const [activateResponsable, setActivateResponsable] = useState(true)
+	const [listResponsables, setListResponsables] = useState([])
+	const [messageResponsable, setMessageResponsable] = useState('')
+	const [colorBtn, setColorBtn] = useState('contact-add')
 
 	const user = 1
 
@@ -79,6 +87,13 @@ export default function Setor() {
 		setMessage('')
 		allSetores()
 		setNameButton('Cadastrar')
+		setName('')
+		setEmail('')
+		setActivateResponsable(true)
+		allResponsablesSector()
+		setMessageResponsable('')
+		setResponsableId('')
+		setColorBtn('contact-add')
 	}
 
 	// data to do editing
@@ -109,14 +124,118 @@ export default function Setor() {
 		}
 	}
 
+	// function to load all responsables
+	const allResponsablesSector = async () => {
+		try {
+			const responsable = await api.get(`/responsable_sector/data`)
+			setListResponsables(responsable.data)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	// use efect to execute function all setores
 	useEffect(() => {
 		allSetores()
+		allResponsablesSector()
 	}, [])
 
 	// header to table of setores
 	const header = ['ID', 'Setor', 'Ativo', 'Ações']
 
+	const handleSubmitResponsables = async (e, sector_id) => {
+		e.preventDefault()
+		if (colorBtn === 'contact-add') {
+			try {
+				await api.post(`/responsable_sector/add`, {
+					user_id: user,
+					sector_id,
+					name,
+					email,
+					activate: activateResponsable,
+				})
+				setMessageResponsable({
+					type: 'success',
+					msg: 'Responsável incluído com sucesso!',
+				})
+				setTimeout(() => {
+					handleClear()
+				}, 2000)
+			} catch (error) {
+				console.log(error)
+				error.response.data.erros === 'Validation error'
+					? setMessageResponsable({
+							type: 'error',
+							msg: 'Contato já cadastrado!',
+					  })
+					: setMessageResponsable({
+							type: 'error',
+							msg: error.response.data.msg,
+					  })
+				setTimeout(() => {
+					handleClear()
+				}, 2000)
+			}
+		} else {
+			try {
+				await api.patch(`/responsable_sector/update`, {
+					id: responsableId,
+					sector_id: id,
+					name,
+					email,
+					activate: activateResponsable,
+				})
+				setMessageResponsable({
+					type: 'edit',
+					msg: 'Responsável alterado com sucesso!',
+				})
+				setTimeout(() => {
+					handleClear()
+				}, 2000)
+			} catch (error) {
+				console.log(error)
+				error.response.data.erros === 'Validation error'
+					? setMessageResponsable({
+							type: 'error',
+							msg: 'Contato já cadastrado!',
+					  })
+					: setMessageResponsable({
+							type: 'error',
+							msg: error.response.data.msg,
+					  })
+				setTimeout(() => {
+					handleClear()
+				}, 2000)
+			}
+		}
+	}
+
+	// disable or enable responsable
+	const toogleResponsable = async (id, activate) => {
+		try {
+			await api.put(`/responsable_sector/update`, {
+				id,
+				activate: !activate,
+			})
+			allResponsablesSector()
+			handleClear()
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	// edit responsable
+	const handleEditResponsable = (data) => {
+		setId(data.sector_id)
+		setResponsableId(data.id)
+		setName(data.name)
+		setEmail(data.email)
+		setActivateResponsable(data.activate)
+		setColorBtn('contact-edit')
+	}
+
+	// heder to table of responsables sector
+	const headerResponsable = ['ID', 'Nome', 'Email', 'Ativo', 'Ações']
 	return (
 		<MyContainer>
 			<h1 className={style.title}>Setor</h1>
@@ -127,7 +246,7 @@ export default function Setor() {
 					value={description}
 					handleOnChange={(e) => setDescription(e.target.value)}
 					label='Setor'
-					width='50%'
+					width='80%'
 					margin='0 2% 0 0'
 				/>
 				<CheckBox
@@ -135,6 +254,7 @@ export default function Setor() {
 					value={activate}
 					toggleOnChange={() => setActivate(!activate)}
 					margin='0 2% 0 0'
+					width='10%'
 				/>
 				<MyButton
 					nameBtn={nameButton}
@@ -146,7 +266,8 @@ export default function Setor() {
 
 			<Table
 				header={header}
-				width='67.5%'>
+				width='100%'
+				numberColAction={3}>
 				{listSetores.map((data) => {
 					return (
 						<tr key={data.id}>
@@ -171,6 +292,109 @@ export default function Setor() {
 										handleOnClick={() => handleEdit(data.id)}
 										title={`Clique para editar o setor ${data.description}!`}
 									/>
+								</td>
+								<td>
+									<Modal
+										titleModal='Responsáveis Setor'
+										textModal=''
+										width='100%'
+										handleClear={handleClear}>
+										<Form
+											margin='1% 0 0 0'
+											flexDirection='column'
+											handleOnSubmit={(e) =>
+												handleSubmitResponsables(e, data.id)
+											}>
+											<Input
+												disabled={true}
+												label='Setor'
+												value={data.description}
+												width='100%'
+											/>
+											<section
+												style={{
+													display: 'flex',
+													justifyContent: 'space-between',
+													alignItems: 'center',
+													width: '100%',
+												}}>
+												<Input
+													disabled={false}
+													label='Nome'
+													value={name}
+													handleOnChange={(e) => setName(e.target.value)}
+													width='100%'
+													margin='0 0.5% 0 0'
+												/>
+												<Input
+													disabled={false}
+													label='Email'
+													value={email}
+													handleOnChange={(e) => setEmail(e.target.value)}
+													type='email'
+													width='100%'
+												/>
+												<CheckBox
+													nameCheckBox='Ativo'
+													value={activateResponsable}
+													toggleOnChange={() =>
+														setActivateResponsable(!activateResponsable)
+													}
+													width='10%'
+													margin='0 3%'
+												/>
+												<ButtonTable
+													typeButton={
+														colorBtn === 'contact-add'
+															? 'contact-add'
+															: 'contact-edit'
+													}
+													type='submit'
+												/>
+											</section>
+										</Form>
+										<Table header={headerResponsable}>
+											{listResponsables
+												.filter((it) => it.sector_id === data.id)
+												.map((item) => {
+													return (
+														<tr key={item.id}>
+															<td>{item.id}</td>
+															<td>{item.name}</td>
+															<td>{item.email}</td>
+															<td>{item.activate ? 'Sim' : 'Não'}</td>
+															<td>
+																<ButtonTable
+																	typeButton={
+																		item.activate ? 'checked' : 'unchecked'
+																	}
+																	title={
+																		item.activate
+																			? `Clique para desativar o responsavel ${item.name}`
+																			: `Clique para ativar o responsavel ${item.name}`
+																	}
+																	handleOnClick={() =>
+																		toogleResponsable(item.id, item.activate)
+																	}
+																/>
+															</td>
+															<td>
+																<ButtonTable
+																	typeButton='edit'
+																	title={`Clique para editar o responsavel ${item.name}`}
+																	handleOnClick={() =>
+																		handleEditResponsable(item)
+																	}
+																/>
+															</td>
+														</tr>
+													)
+												})}
+										</Table>
+										{messageResponsable && (
+											<Message message={messageResponsable} />
+										)}
+									</Modal>
 								</td>
 							</div>
 						</tr>
