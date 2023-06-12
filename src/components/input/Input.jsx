@@ -14,18 +14,21 @@ export default function BasicTextFields({
 	disabled = false,
 	handleOnFocus = null,
 	handleOnBlur = null,
+	height,
+	name,
 }) {
 	return (
 		<TextField
 			id={label}
 			label={label}
 			variant={variant}
+			name={name}
 			type={type}
 			value={value}
 			onChange={handleOnChange}
 			onFocus={handleOnFocus}
 			onBlur={handleOnBlur}
-			style={{ width, margin }}
+			style={{ width, margin, height }}
 			disabled={disabled}
 		/>
 	)

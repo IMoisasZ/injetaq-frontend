@@ -7,14 +7,15 @@ import MyContainer from '../../components/container/Container'
 const cadastros = [
 	{ id: 1, namePage: 'Usuário', link: '/cadastros/usuario' },
 	{ id: 2, namePage: 'Cliente', link: '/cadastros/cliente' },
-	{ id: 3, namePage: 'Setor', link: '/cadastros/setor' },
-	{ id: 4, namePage: 'DI', link: '/cadastros/di' },
+	{ id: 3, namePage: 'Fornecedor', link: '/cadastros/fornecedor' },
+	{ id: 4, namePage: 'Setor', link: '/cadastros/setor' },
+	{ id: 5, namePage: 'DI', link: '/cadastros/di' },
 	{
-		id: 5,
+		id: 6,
 		namePage: 'Alerta da Qualidade',
 		link: '/cadastros/alerta_qualidade',
 	},
-	{ id: 6, namePage: 'RNC', link: '/cadastros/rnc' },
+	{ id: 7, namePage: 'RNC', link: '/cadastros/rnc' },
 ]
 
 export default function Cadastros() {

@@ -7,7 +7,10 @@ import Input from '../../components/input/Input'
 import MySelect from '../../components/select/Select'
 import { MenuItem } from '@mui/material'
 import TextArea from '../../components/textArea/TextArea'
+import RadioButton from '../../components/radioButton/RadioButton'
+import Modal from '../../components/modal/Modal'
 import api from '../../api/api'
+import style from './AlertaQualidade.module.css'
 
 export default function AlertaQualidade() {
 	const [numberAlert, setNumberAlert] = useState('')
@@ -22,11 +25,20 @@ export default function AlertaQualidade() {
 	const [partNumber, setPartNumber] = useState('')
 	const [client, setClient] = useState('')
 	const [responsable, setresponsable] = useState('')
+	const [contact, setContact] = useState('')
+	const [email, setEmail] = useState('')
+	const [radioButton, setRadioButton] = useState('')
+	const [listClient, setListClient] = useState([])
+	const [listSupplier, setListSupplier] = useState([])
+	const [listSector, setListSector] = useState([])
+	const [file, setFile] = useState('')
+	const [descriptionFile, setDescriptionFile] = useState('')
+	const [listImg, setListImg] = useState([])
 
 	// download all DI's included
 	const allDis = async () => {
 		try {
-			const response = await api.get(`/di/data`)
+			const response = await api.get(`/di/data?alert${true}`)
 			setListDi(response.data)
 		} catch (error) {
 			console.log(error)
@@ -45,9 +57,28 @@ export default function AlertaQualidade() {
 			setPartName(dataDi.partName)
 			setPartNumber(dataDi.partNumber)
 			setNumber(dataDi.number)
-			setClient(dataDi.cliente.description)
+			setClient(dataDi.Client.description)
 		}
 	}, [di, listDi])
+
+	useEffect(() => {
+		let dataResponsable = ''
+		if (responsable) {
+			if (radioButton === 'cliente') {
+				dataResponsable = listClient.find((it) => it.id === responsable)
+				setContact(dataResponsable.ContactClients[0].name)
+				setEmail(dataResponsable.ContactClients[0].email)
+			} else if (radioButton === 'fornecedor') {
+				dataResponsable = listSupplier.find((it) => it.id === responsable)
+				setContact(dataResponsable.contact_suppliers[0].name)
+				setEmail(dataResponsable.contact_suppliers[0].email)
+			} else {
+				dataResponsable = listSector.find((it) => it.id === responsable)
+				setContact(dataResponsable.responsable_sectors[0].name)
+				setEmail(dataResponsable.responsable_sectors[0].email)
+			}
+		}
+	}, [responsable, radioButton, listClient, listSector, listSupplier])
 
 	// include alert
 	const handleSubmit = (e) => {
@@ -58,9 +89,99 @@ export default function AlertaQualidade() {
 		}
 	}
 
+	const radio = [
+		{
+			value: 'cliente',
+			label: 'Cliente',
+		},
+		{
+			value: 'fornecedor',
+			label: 'Fornecedor',
+		},
+		{
+			value: 'setor',
+			label: 'Setor',
+		},
+	]
+
+	const dataRadioButton = async (radioBtn) => {
+		const storageClient = localStorage.getItem('clients')
+		const storageSupplier = localStorage.getItem('supplier')
+		const storageSector = localStorage.getItem('sector')
+		switch (radioBtn) {
+			case 'cliente':
+				if (storageClient) {
+					setListClient(JSON.parse(storageClient))
+				} else {
+					const { data } = await api.get(`/cliente/data`)
+					setListClient(data)
+					localStorage.setItem('clients', JSON.stringify(data))
+				}
+				break
+			case 'fornecedor':
+				if (storageSupplier) {
+					setListSupplier(JSON.parse(storageSupplier))
+				} else {
+					const { data } = await api.get(`/supplier/data`)
+					setListSupplier(data)
+					localStorage.setItem('supplier', JSON.stringify(data))
+				}
+				break
+			case 'setor':
+				if (storageSector) {
+					setListSector(JSON.parse(storageSector))
+				} else {
+					const { data } = await api.get(`/sector/data`)
+					setListSector(data)
+					localStorage.setItem('sector', JSON.stringify(data))
+				}
+				break
+
+			default:
+				break
+		}
+	}
+
+	const handleRadioButton = (e) => {
+		const radioBtn = e.target.value
+		dataRadioButton(radioBtn)
+		setRadioButton(radioBtn)
+	}
+
+	const handleImage = async () => {
+		try {
+			const data = new FormData()
+			data.append('file', file)
+			await api.post(`/images/add`, data)
+			allImages()
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const allImages = async () => {
+		try {
+			const response = await api.get(`/images/data`)
+			console.log(response.data)
+			setListImg(response.data)
+		} catch (error) {
+			throw error
+		}
+	}
+
+	useState(() => {
+		allImages()
+	}, [])
+
+	console.log(file)
+
+	const url = `http://localhost:3001/files/`
+
+	const handleClear = () => {}
+
 	return (
 		<Container>
-			<h1 style={{ textAlign: 'center' }}>Alerta da Qualidade</h1>
+			<h1 style={{ textAlign: 'center', margin: '0' }}>Alerta da Qualidade</h1>
 			<Form
 				handleOnSubmit={handleSubmit}
 				flexDirection='column'>
@@ -70,7 +191,7 @@ export default function AlertaQualidade() {
 						justifyContent: 'flex-end',
 						alignItems: 'center',
 						width: '100%',
-						margin: '0 0 1% 0',
+						margin: '0 0 0 0',
 					}}>
 					<Input
 						label='Numero Alerta'
@@ -99,7 +220,7 @@ export default function AlertaQualidade() {
 						justifyContent: 'space-between',
 						alignItems: 'center',
 						width: '100%',
-						margin: '0 0 1% 0',
+						margin: '0.5% 0 0% 0',
 					}}>
 					<MySelect
 						label='DI'
@@ -144,7 +265,7 @@ export default function AlertaQualidade() {
 						justifyContent: 'space-between',
 						alignItems: 'center',
 						width: '100%',
-						margin: '0 0 1% 0',
+						margin: '0.5% 0 0% 0',
 					}}>
 					<Input
 						label='Nome da peça'
@@ -170,19 +291,158 @@ export default function AlertaQualidade() {
 				<section
 					style={{
 						display: 'flex',
-						justifyContent: 'flex-start',
+						justifyContent: 'space-between',
 						alignItems: 'center',
 						width: '100%',
+						margin: '0.5% 0 0 0',
 					}}>
+					<div
+						style={{
+							width: '100%',
+							margin: '0 0.5% 0 0',
+							border: '1px solid #c0c0c0',
+							borderRadius: '0.3em',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}>
+						<RadioButton
+							width='100%'
+							options={radio}
+							nameRadioGroup={`Causador - ${radioButton.toUpperCase()}`}
+							defaultValue=''
+							handleOnChange={(e) => handleRadioButton(e)}
+						/>
+					</div>
 					<MySelect
-						label='Responsáveis'
+						label={
+							radioButton === 'cliente'
+								? 'Cliente'
+								: radioButton === 'fornecedor'
+								? 'Fornecedor'
+								: 'Setor'
+						}
 						value={responsable}
 						handleOnChange={(e) => setresponsable(e.target.value)}
-						width='30%'>
-						<MenuItem>Responsáveis</MenuItem>
+						width='100%'
+						margin='0 0.5% 0 0'>
+						{radioButton === 'cliente'
+							? listClient.map((it) => {
+									return (
+										<MenuItem
+											key={it.id}
+											value={it.id}>
+											{it.description}
+										</MenuItem>
+									)
+							  })
+							: radioButton === 'fornecedor'
+							? listSupplier.map((it) => {
+									return (
+										<MenuItem
+											key={it.id}
+											value={it.id}>
+											{it.description}
+										</MenuItem>
+									)
+							  })
+							: radioButton === 'setor'
+							? listSector.map((it) => {
+									return (
+										<MenuItem
+											key={it.id}
+											value={it.id}>
+											{it.description}
+										</MenuItem>
+									)
+							  })
+							: ''}
 					</MySelect>
+					<Input
+						width='100%'
+						margin='0 0.5% 0 0'
+						disabled={true}
+						value={contact}
+						label={
+							radioButton === 'cliente' || radioButton === 'fornecedor'
+								? 'Contato'
+								: radioButton === 'setor'
+								? 'Responsável'
+								: ''
+						}
+					/>
+					<Input
+						width='100%'
+						disabled={true}
+						value={email}
+						label='Email'
+					/>
 				</section>
-				<TextArea />
+				<TextArea
+					margin='0.5% 0 0 0'
+					label='Descrição da alerta'
+				/>
+				<section
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						width: '100%',
+						margin: '0.5% 0 0 0',
+					}}>
+					<form
+						onSubmit={handleImage}
+						encType='multipart/form-data'
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							alignItems: 'flex-start',
+							justifyContent: 'center',
+							width: '100%',
+							margin: '0.5% 0 0 0',
+						}}>
+						<input
+							name='file'
+							onChange={(e) => setFile(e.target.files[0])}
+							type='file'
+						/>
+
+						<Input
+							disabled={false}
+							value={descriptionFile}
+							handleOnChange={(e) => setDescriptionFile(e.target.value)}
+							width='40%'
+							margin='0.5% 0 0 0'
+						/>
+					</form>
+
+					<Modal
+						typeBtnTable='edit'
+						handleClear={handleClear}>
+						<div
+							style={{
+								display: 'flex',
+								widt: '100%',
+								justifyContent: 'space-between',
+								margin: '0 0.2em 0 0',
+								flexWrap: 'wrap',
+								flexDirection: 'row',
+							}}>
+							{listImg.map((i) => {
+								return (
+									<img
+										src={`${url}${i.name}`}
+										alt='img'
+										style={{ width: '10em', maxWidth: '18em' }}
+										className={style.img}
+									/>
+								)
+							})}
+						</div>
+					</Modal>
+
+					<button onClick={handleImage}>Incluir Imagens</button>
+				</section>
 			</Form>
 		</Container>
 	)

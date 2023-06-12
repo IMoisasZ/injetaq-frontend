@@ -4,10 +4,12 @@ import React from 'react'
 import Progress from '../progress/Progress'
 import style from './Message.module.css'
 
-export default function Message({ message }) {
+export default function Message({ message, width }) {
 	console.debug('===>', message)
 	return (
-		<div className={style.containerMessage}>
+		<div
+			className={style.containerMessage}
+			style={{ width }}>
 			<p
 				className={
 					message.type === 'success'

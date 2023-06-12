@@ -17,6 +17,7 @@ export default function FormDialog({
 	width = '100%',
 	typeBtnTable = 'contact',
 	handleClear,
+	titleBtnModal,
 }) {
 	console.log(typeBtnTable)
 	const [open, setOpen] = React.useState(false)
@@ -35,7 +36,7 @@ export default function FormDialog({
 			<ButtonTable
 				handleOnClick={handleClickOpen}
 				typeButton={typeBtnTable}
-				title={`Verificar os contaotos do cliente ${cliente} `}
+				title={titleBtnModal}
 			/>
 			<Dialog
 				open={open}

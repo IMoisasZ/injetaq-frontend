@@ -11,7 +11,7 @@ import Table from '../../components/table/Table'
 import ButtonTable from '../../components/button/ButtonTable'
 import Message from '../../components/message/Message'
 import Modal from '../../components/modal/Modal'
-import style from './Setor.module.css'
+import style from './Sector.module.css'
 
 export default function Setor() {
 	const [id, setId] = useState('')
@@ -35,7 +35,7 @@ export default function Setor() {
 		e.preventDefault()
 		if (nameButton === 'Cadastrar') {
 			try {
-				await api.post(`/setor/add`, {
+				await api.post(`/sector/add`, {
 					user_id: user,
 					description,
 					activate,
@@ -56,7 +56,7 @@ export default function Setor() {
 			}
 		} else {
 			try {
-				await api.patch(`/setor/update`, {
+				await api.patch(`/sector/update`, {
 					id,
 					user_id: user,
 					description,
@@ -107,7 +107,7 @@ export default function Setor() {
 
 	// disable or enable a setor
 	const disableEnableSetor = async (data) => {
-		await api.put(`/setor/update`, {
+		await api.put(`/sector/update`, {
 			id: data.id,
 			activate: !data.activate,
 		})
@@ -117,7 +117,7 @@ export default function Setor() {
 	// function to load all setores
 	const allSetores = async () => {
 		try {
-			const response = await api.get(`/setor/data`)
+			const response = await api.get(`/sector/data`)
 			setListSetores(response.data)
 		} catch (error) {
 			setMessage(error.response.data.erros)
@@ -311,13 +311,7 @@ export default function Setor() {
 												value={data.description}
 												width='100%'
 											/>
-											<section
-												style={{
-													display: 'flex',
-													justifyContent: 'space-between',
-													alignItems: 'center',
-													width: '100%',
-												}}>
+											<section className={style.sectionFormContact}>
 												<Input
 													disabled={false}
 													label='Nome'

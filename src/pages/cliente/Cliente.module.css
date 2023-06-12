@@ -9,3 +9,14 @@
     width: 50%;
     margin: 0 auto  
 }
+
+.sectionFormContact {
+    display: flex;
+	justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.divTableContact {
+    width: 100%;
+}

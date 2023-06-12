@@ -38,6 +38,8 @@ export default function DI() {
 	const [listDi, setListDi] = useState([])
 	const [lastDiAdd, setLastDiAdd] = useState('')
 
+	const user = 1
+
 	const allClients = async () => {
 		try {
 			const response = await api.get(`/cliente/data`)
@@ -61,6 +63,7 @@ export default function DI() {
 		e.preventDefault()
 		try {
 			const response = await api.post(`/di/add`, {
+				user_id: user,
 				di: 9999999,
 				op,
 				description,

@@ -12,7 +12,6 @@ import Table from '../../components/table/Table'
 import ButtonTable from '../../components/button/ButtonTable'
 import Message from '../../components/message/Message'
 import style from './Cliente.module.css'
-import { all } from 'axios'
 
 export default function Cliente({ handleModal }) {
 	const [id, setId] = useState('')
@@ -181,7 +180,7 @@ export default function Cliente({ handleModal }) {
 		} else {
 			try {
 				await api.patch(`/contact_client/update`, {
-					id,
+					id: contactId,
 					name,
 					email,
 					phone,
@@ -299,53 +298,45 @@ export default function Cliente({ handleModal }) {
 											width='100%'
 											margin='1% 0 0 0'
 											handleOnSubmit={(e) => handleContact(e, data.id)}>
-											<div style={{ width: '100%' }}>
+											<Input
+												label='Cliente'
+												disabled={true}
+												value={data.description}
+												width='100%'
+											/>
+											<section className={style.sectionFormContact}>
 												<Input
-													label='Cliente'
-													disabled={true}
-													value={data.description}
+													label='Nome'
+													disabled={false}
+													value={name}
+													handleOnChange={(e) => setName(e.target.value)}
+													width='100%'
+													margin='0 0.5% 0 0 '
+												/>
+												<Input
+													label='Email'
+													disabled={false}
+													type='email'
+													value={email}
+													handleOnChange={(e) => setEmail(e.target.value)}
+													width='100%'
+													margin='0 0.5% 0 0 '
+												/>
+												<Input
+													label='Telefone'
+													disabled={false}
+													value={phone}
+													handleOnChange={(e) => setPhone(e.target.value)}
 													width='100%'
 												/>
-												<section
-													style={{
-														display: 'flex',
-														justifyContent: 'space-between',
-														alignItems: 'center',
-														width: '100%',
-													}}>
-													<Input
-														label='Nome'
-														disabled={false}
-														value={name}
-														handleOnChange={(e) => setName(e.target.value)}
-														width='100%'
-														margin='0 0.5% 0 0 '
-													/>
-													<Input
-														label='Email'
-														disabled={false}
-														type='email'
-														value={email}
-														handleOnChange={(e) => setEmail(e.target.value)}
-														width='100%'
-														margin='0 0.5% 0 0 '
-													/>
-													<Input
-														label='Telefone'
-														disabled={false}
-														value={phone}
-														handleOnChange={(e) => setPhone(e.target.value)}
-														width='100%'
-													/>
 
-													<ButtonTable
-														typeButton={colorBtn}
-														type='submit'
-													/>
-												</section>
-											</div>
+												<ButtonTable
+													typeButton={colorBtn}
+													type='submit'
+												/>
+											</section>
 										</Form>
-										<div style={{ width: '100%' }}>
+										<div className={style.divTableContact}>
 											<Table header={headerContacts}>
 												{listContactClients
 													.filter((it) => it.client_id === data.id)

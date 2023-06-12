@@ -1,0 +1,13 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.5%;
+    border: 1px solid #c0c0c0;
+    border-radius: 0.5em;
+}
+
+.title {
+    text-align: center;
+}
+
