@@ -42,7 +42,7 @@ export default function DI() {
 
 	const allClients = async () => {
 		try {
-			const response = await api.get(`/cliente/data`)
+			const response = await api.get(`/client/data`)
 			setListClients(response.data)
 		} catch (error) {
 			console.log({ error })

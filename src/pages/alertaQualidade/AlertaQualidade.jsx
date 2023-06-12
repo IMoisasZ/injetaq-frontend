@@ -113,7 +113,7 @@ export default function AlertaQualidade() {
 				if (storageClient) {
 					setListClient(JSON.parse(storageClient))
 				} else {
-					const { data } = await api.get(`/cliente/data`)
+					const { data } = await api.get(`/client/data`)
 					setListClient(data)
 					localStorage.setItem('clients', JSON.stringify(data))
 				}
@@ -418,24 +418,33 @@ export default function AlertaQualidade() {
 
 					<Modal
 						typeBtnTable='edit'
-						handleClear={handleClear}>
+						handleClear={handleClear}
+						titleModal='Images da alerta'
+						textModal=''
+						fullModal={false}>
 						<div
 							style={{
 								display: 'flex',
 								widt: '100%',
-								justifyContent: 'space-between',
-								margin: '0 0.2em 0 0',
+								justifyContent: 'center',
+								margin: '0.2em 0',
 								flexWrap: 'wrap',
 								flexDirection: 'row',
 							}}>
 							{listImg.map((i) => {
 								return (
-									<img
-										src={`${url}${i.name}`}
-										alt='img'
-										style={{ width: '10em', maxWidth: '18em' }}
-										className={style.img}
-									/>
+									<div className={style.zoomimg}>
+										<img
+											src={`${url}${i.name}`}
+											alt='img'
+											style={{
+												width: '70em',
+												maxWidth: '70em',
+												margin: '2em',
+											}}
+											className={style.img}
+										/>
+									</div>
 								)
 							})}
 						</div>

@@ -10,7 +10,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import ButtonTable from '../button/ButtonTable'
 
 export default function FormDialog({
-	cliente,
 	titleModal,
 	textModal = 'Write the text about the modal',
 	children,
@@ -18,6 +17,7 @@ export default function FormDialog({
 	typeBtnTable = 'contact',
 	handleClear,
 	titleBtnModal,
+	fullModal = false,
 }) {
 	console.log(typeBtnTable)
 	const [open, setOpen] = React.useState(false)
@@ -42,6 +42,7 @@ export default function FormDialog({
 				open={open}
 				onClose={handleClose}
 				fullWidth={true}
+				fullScreen={fullModal}
 				maxWidth='lg'>
 				<DialogTitle>{titleModal}</DialogTitle>
 				<DialogContent>

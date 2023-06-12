@@ -26,7 +26,8 @@ export default function Cliente({ handleModal }) {
 	const [name, setName] = useState('')
 	const [email, setEmail] = useState('')
 	const [phone, setPhone] = useState('')
-	const [colorBtn, setColorBtn] = useState('contact')
+	const [colorBtn, setColorBtn] = useState('contact-add')
+	const [activateContact, setActivateContact] = useState(true)
 
 	const user = 1
 
@@ -35,7 +36,7 @@ export default function Cliente({ handleModal }) {
 		e.preventDefault()
 		if (nameButton === 'Cadastrar') {
 			try {
-				await api.post(`/cliente/add`, {
+				await api.post(`/client/add`, {
 					user_id: user,
 					description,
 					activate,
@@ -56,7 +57,7 @@ export default function Cliente({ handleModal }) {
 			}
 		} else {
 			try {
-				await api.patch(`/cliente/update`, {
+				await api.patch(`/client/update`, {
 					id,
 					user_id: user,
 					description,
@@ -115,19 +116,17 @@ export default function Cliente({ handleModal }) {
 
 	// disable or enable a client
 	const disableEnableCliente = async (data) => {
-		await api.put(`/cliente/update`, {
+		await api.put(`/client/update`, {
 			id: data.id,
 			activate: !data.activate,
 		})
 		await allClientes()
 	}
 
-	console.log(colorBtn)
-
 	// function to load all clients
 	const allClientes = async () => {
 		try {
-			const response = await api.get(`/cliente/data`)
+			const response = await api.get(`/client/data`)
 			setListClients(response.data)
 		} catch (error) {
 			setMessage(error.response.data.erros)
@@ -184,6 +183,7 @@ export default function Cliente({ handleModal }) {
 					name,
 					email,
 					phone,
+					activate: activateContact,
 				})
 				allContactsClients()
 				setMessageContact({
@@ -205,16 +205,14 @@ export default function Cliente({ handleModal }) {
 		}
 	}
 
-	const handleDelete = async (id) => {
+	const handleDisableEnableClient = async (id, activate) => {
 		try {
-			await api.delete(`/contact_client/delete/${id}`)
-			setMessageContact({
-				type: 'success',
-				msg: 'Contato deletado com sucesso!',
+			await api.put(`/contact_client/update`, {
+				id,
+				activate: !activate,
 			})
-			setTimeout(() => {
-				handleClear()
-			}, 2000)
+			allContactsClients()
+			handleClear()
 		} catch (error) {
 			console.log({ error })
 		}
@@ -224,7 +222,7 @@ export default function Cliente({ handleModal }) {
 	const header = ['ID', 'Cliente', 'Ativo', 'Ações']
 
 	// header to table of contacts clients
-	const headerContacts = ['ID', 'Nome', 'Email', 'Telefone', 'Ações']
+	const headerContacts = ['ID', 'Nome', 'Email', 'Telefone', 'Ativo', 'Ações']
 
 	return (
 		<MyContainer>
@@ -288,6 +286,8 @@ export default function Cliente({ handleModal }) {
 									<Modal
 										cliente={data.description}
 										titleModal='Contato Clientes'
+										titleBtnModal='Contato dos clientes'
+										typeBtnTable='contact'
 										textModal=''
 										width='100%'
 										handleClear={handleClear}>
@@ -330,6 +330,14 @@ export default function Cliente({ handleModal }) {
 													width='100%'
 												/>
 
+												<CheckBox
+													nameCheckBox='Ativo'
+													value={activateContact}
+													toggleOnChange={() =>
+														setActivateContact(!activateContact)
+													}
+												/>
+
 												<ButtonTable
 													typeButton={colorBtn}
 													type='submit'
@@ -347,6 +355,7 @@ export default function Cliente({ handleModal }) {
 																<td>{item.name}</td>
 																<td>{item.email}</td>
 																<td>{item.phone}</td>
+																<td>{item.activate ? 'Sim' : 'Não'}</td>
 																<td>
 																	<ButtonTable
 																		typeButton='edit'
@@ -358,9 +367,20 @@ export default function Cliente({ handleModal }) {
 																</td>
 																<td>
 																	<ButtonTable
-																		typeButton='delete'
-																		title={`Deletar o Cliente ${item.name}`}
-																		handleOnClick={() => handleDelete(item.id)}
+																		typeButton={
+																			item.activate ? 'checked' : 'unchecked'
+																		}
+																		title={
+																			item.activate
+																				? `Clique aqui para desativar o contato ${item.name}`
+																				: `Clique aqui para ativar o contato ${item.name}`
+																		}
+																		handleOnClick={() =>
+																			handleDisableEnableClient(
+																				item.id,
+																				item.activate
+																			)
+																		}
 																	/>
 																</td>
 															</tr>
