@@ -112,6 +112,7 @@ export default function Cliente({ handleModal }) {
 		setEmail(data.email)
 		setPhone(data.phone)
 		setColorBtn('contact-edit')
+		setActivateContact(data.activate)
 	}
 
 	// disable or enable a client
@@ -120,7 +121,7 @@ export default function Cliente({ handleModal }) {
 			id: data.id,
 			activate: !data.activate,
 		})
-		await allClientes()
+		allClientes()
 	}
 
 	// function to load all clients
@@ -150,6 +151,7 @@ export default function Cliente({ handleModal }) {
 
 	// function to see all contacts of client
 	const handleContact = async (e, client_id) => {
+		console.log(client_id)
 		e.preventDefault()
 		if (colorBtn === 'contact-add') {
 			try {
@@ -158,6 +160,7 @@ export default function Cliente({ handleModal }) {
 					name,
 					email,
 					phone,
+					activate: activateContact,
 				})
 				allContactsClients()
 				setMessageContact({
@@ -205,16 +208,41 @@ export default function Cliente({ handleModal }) {
 		}
 	}
 
-	const handleDisableEnableClient = async (id, activate) => {
+	const handleDisableEnableContactClient = async (item) => {
 		try {
 			await api.put(`/contact_client/update`, {
-				id,
-				activate: !activate,
+				id: item.id,
+				activate: !item.activate,
 			})
 			allContactsClients()
 			handleClear()
 		} catch (error) {
 			console.log({ error })
+
+			setMessageContact({ type: 'error', msg: error.response.data.erros })
+
+			setTimeout(() => {
+				handleClear()
+			}, 2000)
+		}
+	}
+
+	const handleMain = async (item) => {
+		try {
+			await api.put(`/contact_client/main/update`, {
+				id: item.id,
+				main: !item.main,
+			})
+			allContactsClients()
+			handleClear()
+		} catch (error) {
+			console.log(error)
+
+			setMessageContact({ type: 'error', msg: error.response.data.erros })
+
+			setTimeout(() => {
+				handleClear()
+			}, 2000)
 		}
 	}
 
@@ -222,7 +250,15 @@ export default function Cliente({ handleModal }) {
 	const header = ['ID', 'Cliente', 'Ativo', 'Ações']
 
 	// header to table of contacts clients
-	const headerContacts = ['ID', 'Nome', 'Email', 'Telefone', 'Ativo', 'Ações']
+	const headerContacts = [
+		'ID',
+		'Nome',
+		'Email',
+		'Telefone',
+		'Principal',
+		'Ativo',
+		'Ações',
+	]
 
 	return (
 		<MyContainer>
@@ -336,6 +372,8 @@ export default function Cliente({ handleModal }) {
 													toggleOnChange={() =>
 														setActivateContact(!activateContact)
 													}
+													width='10%'
+													margin='0 0 0 2%'
 												/>
 
 												<ButtonTable
@@ -345,7 +383,9 @@ export default function Cliente({ handleModal }) {
 											</section>
 										</Form>
 										<div className={style.divTableContact}>
-											<Table header={headerContacts}>
+											<Table
+												header={headerContacts}
+												numberColAction={3}>
 												{listContactClients
 													.filter((it) => it.client_id === data.id)
 													.map((item) => {
@@ -355,6 +395,7 @@ export default function Cliente({ handleModal }) {
 																<td>{item.name}</td>
 																<td>{item.email}</td>
 																<td>{item.phone}</td>
+																<td>{item.main ? 'Sim' : 'Não'}</td>
 																<td>{item.activate ? 'Sim' : 'Não'}</td>
 																<td>
 																	<ButtonTable
@@ -376,11 +417,19 @@ export default function Cliente({ handleModal }) {
 																				: `Clique aqui para ativar o contato ${item.name}`
 																		}
 																		handleOnClick={() =>
-																			handleDisableEnableClient(
-																				item.id,
-																				item.activate
-																			)
+																			handleDisableEnableContactClient(item)
 																		}
+																	/>
+																</td>
+																<td>
+																	<ButtonTable
+																		typeButton={item.main ? 'main' : 'not-main'}
+																		title={
+																			item.main
+																				? `Clique aqui para tirar o contato ${item.name} de principal!`
+																				: `Clique aqui para passar o contato ${item.name} para principal!`
+																		}
+																		handleOnClick={() => handleMain(item)}
 																	/>
 																</td>
 															</tr>

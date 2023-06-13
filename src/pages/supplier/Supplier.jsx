@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { useEffect, useState } from 'react'
 import Container from '../../components/container/Container'
 import Form from '../../components/form/Form'
@@ -221,6 +223,13 @@ export default function Supplier() {
 		}
 	}
 
+	const handleMain = () => {
+		try {
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	const headerSupplier = ['ID', 'Fornecedor', 'Ativo', 'Ações']
 
 	const headerContactSupplier = [
@@ -379,6 +388,17 @@ export default function Supplier() {
 																	typeButton='edit'
 																	title={`Clique aqui para editar o contato ${data.name}`}
 																	handleOnClick={() => handleEditContact(data)}
+																/>
+															</td>
+															<td>
+																<ButtonTable
+																	typeButton={data.main ? 'main' : 'not-main'}
+																	title={
+																		data.main
+																			? `Clique aqui para tirar o contato ${data.name} de principal!`
+																			: `Clique aqui para passar o contato ${data.name} para principal!`
+																	}
+																	handleOnClick={() => handleMain(data)}
 																/>
 															</td>
 														</tr>

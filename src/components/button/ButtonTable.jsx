@@ -7,6 +7,8 @@ import EditIcon from '@mui/icons-material/Edit'
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import MoodIcon from '@mui/icons-material/Mood'
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied'
 import style from './ButtonTable.module.css'
 
 export default function ButtonTable({
@@ -78,6 +80,24 @@ export default function ButtonTable({
 					type={type}
 					title={title}>
 					<DeleteForeverIcon className={style.delete} />
+				</button>
+			)}
+			{typeButton === 'main' && (
+				<button
+					className={style.button}
+					onClick={handleOnClick}
+					type={type}
+					title={title}>
+					<MoodIcon className={style.main} />
+				</button>
+			)}
+			{typeButton === 'not-main' && (
+				<button
+					className={style.button}
+					onClick={handleOnClick}
+					type={type}
+					title={title}>
+					<SentimentDissatisfiedIcon className={style.notMain} />
 				</button>
 			)}
 		</>
