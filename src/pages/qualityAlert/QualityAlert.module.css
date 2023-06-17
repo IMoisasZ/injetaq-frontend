@@ -1,0 +1,41 @@
+.divModal {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.img {
+        transition: 0.5s all ease-in-out;
+        width: 56em;
+        max-width: 56em;
+        margin: 2em;
+}
+
+.textImg {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: large;
+    font-weight: 700;
+}
+
+.sectionForm {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 50%;
+    margin: 1% 0 0 0;
+    padding: 2%;
+    border-radius: 0.2em;
+    border: 1px solid #c0c0c0;
+}
+
+.formImg {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 50%;
+}

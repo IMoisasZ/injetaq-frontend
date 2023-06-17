@@ -10,7 +10,7 @@ import Cliente from '../pages/cliente/Cliente'
 import Supplier from '../pages/supplier/Supplier'
 import Sector from '../pages/sector/Sector'
 import DI from '../pages/di/DI'
-import AlertaQualidade from '../pages/alertaQualidade/AlertaQualidade'
+import AlertaQualidade from '../pages/qualityAlert/QualityAlert'
 
 export default function InjetaqRoutes({ children }) {
 	return (

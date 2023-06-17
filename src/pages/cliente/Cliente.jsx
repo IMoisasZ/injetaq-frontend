@@ -151,7 +151,6 @@ export default function Cliente({ handleModal }) {
 
 	// function to see all contacts of client
 	const handleContact = async (e, client_id) => {
-		console.log(client_id)
 		e.preventDefault()
 		if (colorBtn === 'contact-add') {
 			try {
@@ -161,6 +160,7 @@ export default function Cliente({ handleModal }) {
 					email,
 					phone,
 					activate: activateContact,
+					main: true,
 				})
 				allContactsClients()
 				setMessageContact({

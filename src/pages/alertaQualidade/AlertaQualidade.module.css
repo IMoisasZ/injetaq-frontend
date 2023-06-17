@@ -1,9 +1,0 @@
-.img {
-    width: 100%;
-        transition: 0.5s all ease-in-out;
-}
-
-.img:hover{
-    cursor: pointer;
-    transform: scale(1.2);
-}

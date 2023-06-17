@@ -123,7 +123,6 @@ export default function Supplier() {
 				id: data.id,
 				activate: !data.activate,
 			})
-			allSuppliers()
 			handleClear()
 		} catch (error) {
 			console.log(error)
@@ -141,11 +140,15 @@ export default function Supplier() {
 		try {
 			await api.put(`/contact_supplier/update`, {
 				id,
-				activate: !activate,
+				activate: activate,
 			})
 			handleClear()
 		} catch (error) {
 			console.log(error)
+			setMessageContact({ type: 'error', msg: error.response.data.erros })
+			setTimeout(() => {
+				handleClear()
+			}, 2000)
 		}
 	}
 
@@ -169,6 +172,7 @@ export default function Supplier() {
 					name,
 					email,
 					phone,
+					main: true,
 					activate: activateContact,
 				})
 				setMessageContact({
@@ -223,10 +227,19 @@ export default function Supplier() {
 		}
 	}
 
-	const handleMain = () => {
+	const handleMain = async (id, main) => {
 		try {
+			await api.put('/contact_supplier/main/update', {
+				id,
+				main,
+			})
+			handleClear()
 		} catch (error) {
 			console.log(error)
+			setMessageContact({ type: 'error', msg: error.response.data.erros })
+			setTimeout(() => {
+				handleClear()
+			}, 2000)
 		}
 	}
 
@@ -237,6 +250,7 @@ export default function Supplier() {
 		'Nome',
 		'Email',
 		'Telefone',
+		'Principal',
 		'Ativo',
 		'Ações',
 	]
@@ -354,7 +368,8 @@ export default function Supplier() {
 										</section>
 										<Table
 											header={headerContactSupplier}
-											width='100%'>
+											width='100%'
+											numberColAction={3}>
 											{listContactSupplier
 												.filter((item) => item.supplier_id === it.id)
 												.map((data) => {
@@ -364,6 +379,7 @@ export default function Supplier() {
 															<td>{data.name}</td>
 															<td>{data.email}</td>
 															<td>{data.phone}</td>
+															<td>{data.main ? 'Sim' : 'Não'}</td>
 															<td>{data.activate ? 'Sim' : 'Não'}</td>
 															<td>
 																<ButtonTable
@@ -378,7 +394,7 @@ export default function Supplier() {
 																	handleOnClick={() =>
 																		handleDisableEnableContact(
 																			data.id,
-																			data.activate
+																			!data.activate
 																		)
 																	}
 																/>
@@ -398,7 +414,9 @@ export default function Supplier() {
 																			? `Clique aqui para tirar o contato ${data.name} de principal!`
 																			: `Clique aqui para passar o contato ${data.name} para principal!`
 																	}
-																	handleOnClick={() => handleMain(data)}
+																	handleOnClick={() =>
+																		handleMain(data.id, !data.main)
+																	}
 																/>
 															</td>
 														</tr>

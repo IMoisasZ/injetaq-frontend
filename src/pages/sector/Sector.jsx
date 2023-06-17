@@ -27,6 +27,7 @@ export default function Setor() {
 	const [listResponsables, setListResponsables] = useState([])
 	const [messageResponsable, setMessageResponsable] = useState('')
 	const [colorBtn, setColorBtn] = useState('contact-add')
+	const [main, setMain] = useState(false)
 
 	const user = 1
 
@@ -94,6 +95,7 @@ export default function Setor() {
 		setMessageResponsable('')
 		setResponsableId('')
 		setColorBtn('contact-add')
+		setMain(false)
 	}
 
 	// data to do editing
@@ -147,12 +149,13 @@ export default function Setor() {
 		e.preventDefault()
 		if (colorBtn === 'contact-add') {
 			try {
-				await api.post(`/responsable_sector/add`, {
+				const response = await api.post(`/responsable_sector/add`, {
 					user_id: user,
 					sector_id,
 					name,
 					email,
 					activate: activateResponsable,
+					main: true,
 				})
 				setMessageResponsable({
 					type: 'success',
@@ -184,6 +187,7 @@ export default function Setor() {
 					name,
 					email,
 					activate: activateResponsable,
+					main,
 				})
 				setMessageResponsable({
 					type: 'edit',
@@ -221,6 +225,10 @@ export default function Setor() {
 			handleClear()
 		} catch (error) {
 			console.log(error)
+			setMessageResponsable({ type: 'error', msg: error.response.data.erros })
+			setTimeout(() => {
+				handleClear()
+			}, 2000)
 		}
 	}
 
@@ -234,8 +242,32 @@ export default function Setor() {
 		setColorBtn('contact-edit')
 	}
 
-	// heder to table of responsables sector
-	const headerResponsable = ['ID', 'Nome', 'Email', 'Ativo', 'Ações']
+	const handleMain = async (id, main) => {
+		try {
+			await api.put(`/responsable_sector/main/update`, {
+				id,
+				main,
+			})
+			// allResponsablesSector()
+			handleClear()
+		} catch (error) {
+			console.log(error)
+			setMessageResponsable({ type: 'error', msg: error.response.data.erros })
+			setTimeout(() => {
+				handleClear()
+			}, 2000)
+		}
+	}
+
+	// header to table of responsables sector
+	const headerResponsable = [
+		'ID',
+		'Nome',
+		'Email',
+		'Principal',
+		'Ativo',
+		'Ações',
+	]
 	return (
 		<MyContainer>
 			<h1 className={style.title}>Setor</h1>
@@ -347,7 +379,9 @@ export default function Setor() {
 												/>
 											</section>
 										</Form>
-										<Table header={headerResponsable}>
+										<Table
+											header={headerResponsable}
+											numberColAction={3}>
 											{listResponsables
 												.filter((it) => it.sector_id === data.id)
 												.map((item) => {
@@ -356,6 +390,7 @@ export default function Setor() {
 															<td>{item.id}</td>
 															<td>{item.name}</td>
 															<td>{item.email}</td>
+															<td>{item.main ? 'Sim' : 'Não'}</td>
 															<td>{item.activate ? 'Sim' : 'Não'}</td>
 															<td>
 																<ButtonTable
@@ -378,6 +413,19 @@ export default function Setor() {
 																	title={`Clique para editar o responsavel ${item.name}`}
 																	handleOnClick={() =>
 																		handleEditResponsable(item)
+																	}
+																/>
+															</td>
+															<td>
+																<ButtonTable
+																	typeButton={item.main ? 'main' : 'not-main'}
+																	title={
+																		item.amin
+																			? `Clique para tirar o responsável ${item.name} de PRINCIPAL`
+																			: `Clique para colocar o responsável ${item.name} como PRINCIPAL`
+																	}
+																	handleOnClick={() =>
+																		handleMain(item.id, !item.main)
 																	}
 																/>
 															</td>

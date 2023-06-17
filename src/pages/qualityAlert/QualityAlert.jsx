@@ -10,7 +10,7 @@ import TextArea from '../../components/textArea/TextArea'
 import RadioButton from '../../components/radioButton/RadioButton'
 import Modal from '../../components/modal/Modal'
 import api from '../../api/api'
-import style from './AlertaQualidade.module.css'
+import style from './QualityAlert.module.css'
 
 export default function AlertaQualidade() {
 	const [numberAlert, setNumberAlert] = useState('')
@@ -152,6 +152,9 @@ export default function AlertaQualidade() {
 		try {
 			const data = new FormData()
 			data.append('file', file)
+			data.append('alert_id', null)
+			data.append('rnc_id', null)
+			data.append('description', descriptionFile)
 			await api.post(`/images/add`, data)
 			allImages()
 		} catch (error) {
@@ -172,10 +175,6 @@ export default function AlertaQualidade() {
 	useState(() => {
 		allImages()
 	}, [])
-
-	console.log(file)
-
-	const url = `http://localhost:3001/files/`
 
 	const handleClear = () => {}
 
@@ -378,42 +377,40 @@ export default function AlertaQualidade() {
 						label='Email'
 					/>
 				</section>
-				<TextArea
-					margin='0.5% 0 0 0'
-					label='Descrição da alerta'
-				/>
-				<section
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						width: '100%',
-						margin: '0.5% 0 0 0',
-					}}>
+				<section style={{ width: '100%' }}>
+					<TextArea
+						margin='0.5% 0 0 0'
+						label='Descrição da alerta'
+					/>
+				</section>
+
+				<section className={style.sectionForm}>
 					<form
 						onSubmit={handleImage}
 						encType='multipart/form-data'
-						style={{
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'flex-start',
-							justifyContent: 'center',
-							width: '100%',
-							margin: '0.5% 0 0 0',
-						}}>
-						<input
-							name='file'
-							onChange={(e) => setFile(e.target.files[0])}
-							type='file'
-						/>
+						className={style.formImg}>
+						<div
+							style={{
+								display: 'flex',
+								flexDirection: 'column',
+								width: '100%',
+							}}>
+							<p>Incluir Imagens</p>
+							<input
+								name='file'
+								onChange={(e) => setFile(e.target.files[0])}
+								type='file'
+							/>
 
-						<Input
-							disabled={false}
-							value={descriptionFile}
-							handleOnChange={(e) => setDescriptionFile(e.target.value)}
-							width='40%'
-							margin='0.5% 0 0 0'
-						/>
+							<Input
+								disabled={false}
+								value={descriptionFile}
+								handleOnChange={(e) => setDescriptionFile(e.target.value)}
+								width='40%'
+								margin='0.5% 0 0 0'
+							/>
+						</div>
+						<button onClick={handleImage}>Incluir Imagens</button>
 					</form>
 
 					<Modal
@@ -422,35 +419,21 @@ export default function AlertaQualidade() {
 						titleModal='Images da alerta'
 						textModal=''
 						fullModal={false}>
-						<div
-							style={{
-								display: 'flex',
-								widt: '100%',
-								justifyContent: 'center',
-								margin: '0.2em 0',
-								flexWrap: 'wrap',
-								flexDirection: 'row',
-							}}>
+						<div className={style.divModal}>
 							{listImg.map((i) => {
 								return (
-									<div className={style.zoomimg}>
+									<div className={style.containerImg}>
 										<img
-											src={`${url}${i.name}`}
-											alt='img'
-											style={{
-												width: '70em',
-												maxWidth: '70em',
-												margin: '2em',
-											}}
 											className={style.img}
+											src={`${i.url_default}${i.name}`}
+											alt='img'
 										/>
+										<p className={style.textImg}>{i.description}</p>
 									</div>
 								)
 							})}
 						</div>
 					</Modal>
-
-					<button onClick={handleImage}>Incluir Imagens</button>
 				</section>
 			</Form>
 		</Container>
